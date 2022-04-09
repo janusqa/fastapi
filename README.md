@@ -1,2 +1,2 @@
-# Demo Socal API with FastAPI
+# Demo Social API with FastAPI
 - Language: Python
