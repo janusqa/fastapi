@@ -10,7 +10,7 @@ from fastapi.security import OAuth2PasswordBearer
 
 # db concerns
 from app.db.db import dbconnect, ResultIter
-from app.db.db import database_driver
+from app.db.db import DBError
 
 
 # config concerns
@@ -76,9 +76,9 @@ def get_current_user(jwt_token: str = Depends(oauth2_scheme)):
             query_parameters = (token_data.user_id,)
             curr.execute(sql, query_parameters)
             found_user = next(ResultIter(curr, 1), None)
-        except Exception as error:
+        except (Exception, DBError) as error:
             found_user = None
-            print(error)
+            print(str(error))
             curr.connection.rollback()
 
     return schemas_pd.UserResponse(**found_user)

@@ -1,4 +1,9 @@
 import psycopg as database_driver
+from psycopg import (
+    Error as DBError,
+    errors as DBErrors,
+    OperationalError as DBOpertionalError,
+)
 import contextlib
 import app.config as appconfig
 
@@ -25,13 +30,13 @@ def dbconnect(database_dsn: dict = postgres_dsn):
     curr = None
     try:
         conn = database_driver.connect(**database_dsn)
-    except database_driver.OperationalError as error:
+    except DBOpertionalError as error:
         print(error)
         yield None
     else:
         try:
             curr = conn.cursor()
-        except database_driver.OperationalError as error:
+        except DBOpertionalError as error:
             print(error)
             yield None
         else:

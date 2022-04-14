@@ -4,7 +4,7 @@ from app.utils.oauth2 import create_access_token
 
 # db concerns
 from app.db.db import dbconnect, ResultIter
-from app.db.db import database_driver
+from app.db.db import DBError
 
 # fastapi concerns
 from typing import Optional, List, Union
@@ -48,7 +48,7 @@ def login(auth: schemas_pd.AuthRequest, response: Response):
     except HTTPException as error:
         response.status_code = error.status_code
         return {"detail": error.detail}
-    except (Exception, database_driver.Error) as error:
+    except (Exception, DBError) as error:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"detail": str(error)}
     return {"access_token": access_token, "token_type": "bearer"}

@@ -3,7 +3,7 @@ from app.utils.utils import hash as password_hash
 
 # db concerns
 from app.db.db import dbconnect, ResultIter
-from app.db.db import database_driver
+from app.db.db import DBError
 
 # fastapi concerns
 from typing import Optional, List, Union
@@ -33,7 +33,7 @@ def get_user(user_id: int, response: Response):
     except HTTPException as error:
         response.status_code = error.status_code
         return {"detail": error.detail}
-    except (Exception, database_driver.Error) as error:
+    except (Exception, DBError) as error:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"detail": str(error)}
     return user_found
@@ -62,7 +62,7 @@ def create_user(user: schemas_pd.User, response: Response):
     except HTTPException as error:
         response.status_code = error.status_code
         return {"detail": error.detail}
-    except (Exception, database_driver.Error) as error:
+    except (Exception, DBError) as error:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"detail": str(error)}
     return new_user
