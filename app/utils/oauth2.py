@@ -1,4 +1,3 @@
-from lib2to3.pgen2 import token
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 
@@ -11,7 +10,8 @@ from fastapi.security import OAuth2PasswordBearer
 
 # db concerns
 from app.db.db import dbconnect, ResultIter
-from psycopg import errors
+from app.db.db import database_driver
+
 
 # config concerns
 import app.config as appconfig

@@ -1,6 +1,6 @@
 # db concerns
 from app.db.db import dbconnect, ResultIter
-from psycopg import Error, errors
+from app.db.db import database_driver
 
 # fastapi concerns
 from fastapi import Response, status, HTTPException
@@ -40,18 +40,18 @@ def create_vote(
                 response_message = "Vote does not exist"
                 response_code = status.HTTP_404_NOT_FOUND
                 raise HTTPException(status_code=response_code, detail=response_message)
-    except errors.UniqueViolation as error:
+    except database_driver.errors.UniqueViolation as error:
         response_message = "Unable to cast vote. Already voted?"
         response_code = status.HTTP_409_CONFLICT
         raise HTTPException(status_code=response_code, detail=response_message)
-    except errors.ForeignKeyViolation as error:
+    except database_driver.errors.ForeignKeyViolation as error:
         response_message = "Vote does not exist"
         response_code = status.HTTP_404_NOT_FOUND
         raise HTTPException(status_code=response_code, detail=response_message)
     except HTTPException as error:
         response.status_code = error.status_code
         return {"detail": error.detail}
-    except (Exception, Error) as error:
+    except (Exception, database_driver.Error) as error:
         print(type(error))
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"detail": str(error)}

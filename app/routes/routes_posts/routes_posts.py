@@ -1,13 +1,10 @@
 # db concerns
-from turtle import pos
 from app.db.db import dbconnect, ResultIter
+from app.db.db import database_driver
 
 # fastapi concerns
 from typing import Optional, List, Union
 from fastapi import Response, status, HTTPException
-
-# db concerns
-from psycopg import Error
 
 # schemas concerns
 import app.api.schemas_pd as schemas_pd
@@ -53,7 +50,7 @@ def get_latest_post(user: schemas_pd.UserResponse, response: Response):
     except HTTPException as error:
         response.status_code = error.status_code
         return {"detail": error.detail}
-    except (Exception, Error) as error:
+    except (Exception, database_driver.Error) as error:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"detail": str(error)}
     return post_found
@@ -99,7 +96,7 @@ def get_post(post_id: int, user: schemas_pd.UserResponse, response: Response):
     except HTTPException as error:
         response.status_code = error.status_code
         return {"detail": error.detail}
-    except (Exception, Error) as error:
+    except (Exception, database_driver.Error) as error:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"detail": str(error)}
     return post_found
@@ -157,7 +154,7 @@ def update_post(
     except HTTPException as error:
         response.status_code = error.status_code
         return {"detail": error.detail}
-    except (Exception, Error) as error:
+    except (Exception, database_driver.Error) as error:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"detail": str(error)}
     return new_post
@@ -198,7 +195,7 @@ def delete_post(post_id: int, user: schemas_pd.UserResponse, response: Response)
     except HTTPException as error:
         response.status_code = error.status_code
         return {"detail": error.detail}
-    except (Exception, Error) as error:
+    except (Exception, database_driver.Error) as error:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"detail": str(error)}
     return delete_post
@@ -234,7 +231,7 @@ def create_post(
     except HTTPException as error:
         response.status_code = error.status_code
         return {"detail": error.detail}
-    except (Exception, Error) as error:
+    except (Exception, database_driver.Error) as error:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"detail": str(error)}
     return new_post
@@ -330,7 +327,7 @@ def get_posts(
     except HTTPException as error:
         response.status_code = error.status_code
         return {"detail": error.detail}
-    except (Exception, Error) as error:
+    except (Exception, database_driver.Error) as error:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"detail": str(error)}
     return posts

@@ -1,6 +1,5 @@
-import psycopg
+import psycopg as database_driver
 import contextlib
-from psycopg import OperationalError, errors
 import app.config as appconfig
 
 settings: appconfig.Settings = appconfig.get_settings()
@@ -15,7 +14,7 @@ postgres_dsn = {
 
 
 @contextlib.contextmanager
-def dbconnect():
+def dbconnect(database_dsn: dict = postgres_dsn):
     """
     Returns a Database Cursor that SQL Quries can be executed against.
     If connection is unsuccessful return None and check for validity
@@ -25,14 +24,14 @@ def dbconnect():
     conn = None
     curr = None
     try:
-        conn = psycopg.connect(**postgres_dsn)
-    except OperationalError as error:
+        conn = database_driver.connect(**database_dsn)
+    except database_driver.OperationalError as error:
         print(error)
         yield None
     else:
         try:
             curr = conn.cursor()
-        except OperationalError as error:
+        except database_driver.OperationalError as error:
             print(error)
             yield None
         else:

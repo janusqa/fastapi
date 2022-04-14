@@ -1,6 +1,6 @@
 # db concerns
 from app.db.db import dbconnect, ResultIter
-from psycopg import Error
+from app.db.db import database_driver
 
 # fastapi concerns
 from fastapi import Response, status, HTTPException
@@ -15,7 +15,7 @@ def create_tables(response: Response):
             curr.execute(schemas_db.table_users)
             curr.execute(schemas_db.table_posts)
             curr.execute(schemas_db.table_votes)
-    except (Exception, Error) as error:
+    except (Exception, database_driver.Error) as error:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"detail": str(error)}
     response.status_code = status.HTTP_201_CREATED
